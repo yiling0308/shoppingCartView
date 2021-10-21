@@ -1,0 +1,51 @@
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/storage
+/storage/mysql
+.env
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.htaccess
+/.idea
+/.vscode
+/vendor
+/database/factories/AgentFactory.php
+/database/factories/CustomerFactory.php
+/database/seeders/AgentTableSeeder.php
+/database/seeders/CustomerTableSeeder.php
+
+# ignore log files and databases
+*.log
+*.sql
+*.sqlite
+# ignore compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+# ignore packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+# ignore OS generated files
+ehthumbs.db
+Thumbs.db
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
