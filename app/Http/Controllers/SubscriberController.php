@@ -25,6 +25,7 @@ class SubscriberController extends Controller
 
         foreach ($messages as $message) {
             echo $message->data() . "\n";
+            $subscription->acknowledge($message);
         }
     }
 }
