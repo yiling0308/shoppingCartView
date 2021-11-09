@@ -29,4 +29,4 @@ Route::group([
 });
 
 Route::post('/publish', [PublisherController::class, 'publish']);
-Route::post('/pull', [SubscriberController::class, 'pull']);
+Route::get('/pull', [SubscriberController::class, 'pull']);
