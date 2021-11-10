@@ -19,7 +19,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
+     * 使用者登入
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -42,7 +42,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Register a User.
+     * 註冊使用者
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -63,7 +63,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Log the user out (Invalidate the token).
+     * 使用者登出
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -78,7 +78,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Refresh a token.
+     * 重置使用者 Token
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -92,7 +92,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User.
+     * 查看使用者資訊
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -106,7 +106,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the token array structure.
+     * 創建 Token
      *
      * @param  string $token
      *

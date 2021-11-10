@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\SubscriberController;
 
@@ -26,6 +28,24 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'product'
+], function ($router) {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::post('/add', [ProductController::class, 'store']);
+    Route::post('/delete', [ProductController::class, 'destroy']);
+    Route::post('/update', [ProductController::class, 'update']);
+    Route::get('/detail', [ProductController::class, 'show']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'order'
+], function ($router) {
+    Route::post('/buy', [OrderController::class, 'buy']);
 });
 
 Route::post('/publish', [PublisherController::class, 'publish']);
