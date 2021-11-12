@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\BuyRequest;
 use App\Enums\StatusCodeEnum;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -30,7 +29,21 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
 
-        $result = $this->orderService->buy($validated);
+        try {
+            $result = $this->orderService->buy($validated);
+        } catch (\Exception $e) {
+            $code = $e->getCode();
+            Log::error('Order failed, Error: ' . json_encode([
+                'errorMessage' => $e->getMessage(),
+                'errorCode' => $e->getCode()
+            ]));
+
+            return response()->fail(
+                $code,
+                __('messages.fail'),
+                StatusCodeEnum::FAIL
+            );
+        }
 
         return response()->success(
             $result,

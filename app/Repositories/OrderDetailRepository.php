@@ -38,6 +38,6 @@ class OrderDetailRepository
             $orderDetail->save();
         }
 
-        return;
+        return $orderDetail;
     }
 }

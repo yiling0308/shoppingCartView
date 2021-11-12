@@ -52,6 +52,5 @@ class OrderRepository
         $order->total = $total;
 
         return $order->save();
-
     }
 }

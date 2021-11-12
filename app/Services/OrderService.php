@@ -5,7 +5,10 @@ namespace App\Services;
 use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\OrderDetailRepository;
+use Illuminate\Support\Facades\Log;
+use App\Enums\StatusCodeEnum;
 use Carbon\Carbon;
+use DB;
 
 class OrderService extends BaseService
 {
@@ -53,20 +56,46 @@ class OrderService extends BaseService
         $orderNum = sprintf("%02d", $orderCount + 1);
         $params['oid'] = $now . $orderNum;
 
-        // 商品庫存數量扣除
-        $this->productRepository->productSub($params['list']);
-
         // 消費總額計算
         $total = $this->productRepository->moneyTotal($params['list']);
 
-        // 建立訂單
-        $this->orderRepository->createOrder($params['oid'], $uid, $total);
+        DB::beginTransaction();
 
-        // 建立訂單明細
-        $this->orderDetailRepository->insertOrderDetail($params['list'], $params['oid']);
+        try {
+            // 商品庫存數量扣除
+            if (!$this->productRepository->productSub($params['list'])) {
+                DB::rollback();
 
-        return [
-            'oid' => $params['oid']
-        ];
+                throw new \Exception('Product stock deduction failed', StatusCodeEnum::FAIL);
+            }
+
+            // 建立訂單
+            if (!$this->orderRepository->createOrder($params['oid'], $uid, $total)) {
+                DB::rollback();
+
+                throw new \Exception('Create order failed', StatusCodeEnum::FAIL);
+            }
+
+            // 建立訂單明細
+            if(!$this->orderDetailRepository->insertOrderDetail($params['list'], $params['oid'])) {
+                DB::rollback();
+
+                throw new \Exception('Create order detail failed', StatusCodeEnum::FAIL);
+            }
+
+            DB::commit();
+
+            return [
+                'oid' => $params['oid'],
+                'total' => $total
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            $message = $e->getMessage() ?? 'Fail';
+            $code = $e->getCode() ?? StatusCodeEnum::FAIL;
+
+            throw new \Exception($message, $code);
+        }
     }
 }

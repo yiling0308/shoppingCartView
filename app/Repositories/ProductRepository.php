@@ -61,6 +61,6 @@ class ProductRepository
             $product->save();
         }
 
-        return;
+        return $product;
     }
 }
