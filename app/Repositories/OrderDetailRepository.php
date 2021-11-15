@@ -40,4 +40,22 @@ class OrderDetailRepository
 
         return $orderDetail;
     }
+
+    /**
+     * 查詢訂單明細
+     *
+     * @param object $params
+     * @return array|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
+     */
+    public function findOrder(object $params)
+    {
+        $query = $this->model
+            ->select('product.name', 'order_detail.quantity')
+            ->where('ooid', $params->oid)
+            ->join('product', 'product.id', '=', 'order_detail.pid')
+            ->get()
+            ->toArray();
+
+        return $query;
+    }
 }

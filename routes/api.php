@@ -46,6 +46,7 @@ Route::group([
     'prefix' => 'order'
 ], function ($router) {
     Route::post('/buy', [OrderController::class, 'buy']);
+    Route::post('/find', [OrderController::class, 'findOrder']);
 });
 
 Route::post('/publish', [PublisherController::class, 'publish']);

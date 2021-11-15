@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Order\BuyRequest;
+use App\Http\Requests\Order\findOrderRequest;
 use App\Enums\StatusCodeEnum;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Log;
@@ -44,6 +45,25 @@ class OrderController extends Controller
                 StatusCodeEnum::FAIL
             );
         }
+
+        return response()->success(
+            $result,
+            __('messages.success'),
+            StatusCodeEnum::SUCCESS
+        );
+    }
+
+    /**
+     * 查詢訂單明細
+     *
+     * @param  \App\Http\Requests\Order\findOrderRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function findOrder(findOrderRequest $request)
+    {
+        $validated = $request->validated();
+
+        $result = $this->orderService->findOrder($validated);
 
         return response()->success(
             $result,

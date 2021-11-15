@@ -98,4 +98,29 @@ class OrderService extends BaseService
             throw new \Exception($message, $code);
         }
     }
+
+    /**
+     * 查詢訂單明細
+     *
+     * @param array $params
+     * @return array|null
+     */
+    public function findOrder(array $params)
+    {
+        // 取得訂單資料
+        $orderData = $this->orderRepository->getOne(['*'], ['oid' => $params['oid']]);
+
+        // 取得訂單明細
+        $dataDetail = $this->orderDetailRepository->findOrder($orderData);
+
+        $result = array_merge([
+            "oid" => $params['oid'],
+            "list" => $dataDetail
+        ], [
+            "total" => $orderData['total'],
+            "created_at" => Carbon::parse($orderData['created_at'])->toDateTimeString()
+        ]);
+
+        return $result;
+    }
 }
