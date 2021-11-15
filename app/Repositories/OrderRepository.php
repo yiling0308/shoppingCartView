@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Traits\BaseRepositoryTrait;
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class OrderRepository
 {
@@ -52,5 +53,22 @@ class OrderRepository
         $order->total = $total;
 
         return $order->save();
+    }
+
+    /**
+     * 查詢使者者所有訂單
+     *
+     * @param int $uid
+     * @return array|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
+     */
+    public function findUserOrder(int $uid)
+    {
+        $query = $this->model
+            ->select('id', 'oid', 'total', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") as create_at'))
+            ->where('uid', $uid)
+            ->get()
+            ->toArray();
+
+        return $query;
     }
 }

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\OrderDetailRepository;
-use Illuminate\Support\Facades\Log;
 use App\Enums\StatusCodeEnum;
 use Carbon\Carbon;
 use DB;
@@ -97,6 +96,20 @@ class OrderService extends BaseService
 
             throw new \Exception($message, $code);
         }
+    }
+
+    /**
+     * 查詢使用者所有訂單
+     *
+     * @param int $params
+     * @return array|null
+     */
+    public function findUserOrder(int $params)
+    {
+        // 取得訂單資料
+        $orderData = $this->orderRepository->findUserOrder($params);
+
+        return $orderData;
     }
 
     /**

@@ -45,6 +45,7 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'order'
 ], function ($router) {
+    Route::get('/', [OrderController::class, 'findUserOrder']);
     Route::post('/buy', [OrderController::class, 'buy']);
     Route::post('/find', [OrderController::class, 'findOrder']);
 });

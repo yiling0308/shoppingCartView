@@ -54,6 +54,23 @@ class OrderController extends Controller
     }
 
     /**
+     * 查詢使者者所有訂單
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function findUserOrder()
+    {
+        $uid = auth()->id();
+        $result = $this->orderService->findUserOrder($uid);
+
+        return response()->success(
+            $result,
+            __('messages.success'),
+            StatusCodeEnum::SUCCESS
+        );
+    }
+
+    /**
      * 查詢訂單明細
      *
      * @param  \App\Http\Requests\Order\findOrderRequest  $request
