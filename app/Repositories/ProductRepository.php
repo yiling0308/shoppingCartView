@@ -21,6 +21,21 @@ class ProductRepository
     }
 
     /**
+     * 新增商品
+     *
+     * @param array $params
+     * @return array|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
+     */
+    public function newProduct(array $params)
+    {
+        $products = new Product($params);
+
+        $products->save();
+
+        return $products;
+    }
+
+    /**
      * 消費總額計算
      *
      * @param array $params

@@ -4,18 +4,25 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Services\AuthService;
 use App\Enums\StatusCodeEnum;
 
 class AuthController extends Controller
 {
     /**
+     * @var AuthService
+     */
+    private $authService;
+
+    /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(AuthService $authService)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'index']]);
+        $this->authService = $authService;
     }
 
     /**
@@ -25,7 +32,9 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $token = auth()->attempt($request->validated());
+        $params = auth()->attempt($request->validated());
+
+        $token = $this->authService->createNewToken($params);
 
         if (!$token) {
             return response()->fail(
@@ -35,7 +44,7 @@ class AuthController extends Controller
         }
 
         return response()->success(
-            $this->createNewToken($token),
+            $token,
             __('messages.login_success'),
             StatusCodeEnum::LOGIN_SUCCESS
         );
@@ -50,10 +59,7 @@ class AuthController extends Controller
     {
         $validator = $request->validated();
 
-        $user = User::create(array_merge(
-            $validator,
-            ['password' => bcrypt($request->password),]
-        ));
+        $user = $this->authService->addUser($validator);
 
         return response()->success(
             $user,
@@ -84,8 +90,10 @@ class AuthController extends Controller
      */
     public function refresh()
     {
+        $token = $this->authService->createNewToken(auth()->refresh());
+
         return response()->success(
-            $this->createNewToken(auth()->refresh()),
+            $token,
             __('messages.update_success'),
             StatusCodeEnum::UPDATE_SUCCESS
         );
@@ -103,22 +111,5 @@ class AuthController extends Controller
             __('messages.success'),
             StatusCodeEnum::SUCCESS
         );
-    }
-
-    /**
-     * 創建 Token
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function createNewToken($token)
-    {
-        return [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ];
     }
 }

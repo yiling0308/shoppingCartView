@@ -6,9 +6,25 @@ use App\Models\Product;
 use App\Http\Requests\Product\StoreRequest;
 use App\Http\Requests\Product\ShowRequest;
 use App\Enums\StatusCodeEnum;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
+    /**
+     * @var ProductService
+     */
+    private $productService;
+
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * 查看所有商品
      *
@@ -16,7 +32,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = $this->productService->productAll();
 
         return response()->success(
             $products,
@@ -35,11 +51,10 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
-        $products = new Product($validated);
-
-        $products->save();
+        $newProduct = $this->productService->newProduct($validated);
 
         return response()->success(
+            $newProduct,
             __('messages.create_success'),
             StatusCodeEnum::CREATE_SUCCESS
         );
@@ -55,10 +70,10 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
-        $products = Product::find($validated['id']);
+        $newProduct = $this->productService->findProduct($validated['id']);
 
         return response()->success(
-            $products,
+            $newProduct,
             __('messages.success'),
             StatusCodeEnum::SUCCESS
         );
@@ -74,14 +89,10 @@ class ProductController extends Controller
     {
         $validated = $request->all();
 
-        $products = Product::find($validated['id']);
-
-        $products->update($validated);
-
-        $products->save();
+        $newProduct = $this->productService->updateProduct($validated);
 
         return response()->success(
-            $products,
+            $newProduct,
             __('messages.update_success'),
             StatusCodeEnum::UPDATE_SUCCESS
         );
@@ -97,9 +108,7 @@ class ProductController extends Controller
     {
         $validated = $request->validated();
 
-        $products = Product::find($validated['id']);
-
-        $products->delete();
+        $this->productService->deleteProduct($validated);
 
         return response()->success(
             __('messages.delete_success'),
