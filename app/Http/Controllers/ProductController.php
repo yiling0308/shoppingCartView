@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Http\Requests\Product\StoreRequest;
-use App\Http\Requests\Product\ShowRequest;
 use App\Enums\StatusCodeEnum;
 use App\Services\ProductService;
 
@@ -34,11 +32,9 @@ class ProductController extends Controller
     {
         $products = $this->productService->productAll();
 
-        return response()->success(
-            $products,
-            __('messages.success'),
-            StatusCodeEnum::SUCCESS
-        );
+        $username = session('username');;
+
+        return view('index', compact('products'));
     }
 
     /**
@@ -63,20 +59,13 @@ class ProductController extends Controller
     /**
      * 查看指定商品資訊
      *
-     * @param  \App\Http\Requests\Product\ShowRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(ShowRequest $request)
+    public function show($id)
     {
-        $validated = $request->validated();
+        $product = $this->productService->findProduct($id);
 
-        $newProduct = $this->productService->findProduct($validated['id']);
-
-        return response()->success(
-            $newProduct,
-            __('messages.success'),
-            StatusCodeEnum::SUCCESS
-        );
+        return view('detail', compact('product'));
     }
 
     /**

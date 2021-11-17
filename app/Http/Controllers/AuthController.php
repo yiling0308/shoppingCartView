@@ -1,11 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\EditRequest;
+use App\Http\Requests\ChangePwdRequest;
+use App\Http\Requests\EditInformationRequest;
 use App\Services\AuthService;
-use App\Enums\StatusCodeEnum;
+use Session;
 
 class AuthController extends Controller
 {
@@ -21,8 +23,27 @@ class AuthController extends Controller
      */
     public function __construct(AuthService $authService)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'index']]);
         $this->authService = $authService;
+    }
+
+    /**
+     * 使用者登入畫面
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        return view('login');
+    }
+
+    /**
+     * 使用者註冊畫面
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function registerPage()
+    {
+        return view('register');
     }
 
     /**
@@ -32,22 +53,15 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $params = auth()->attempt($request->validated());
-
-        $token = $this->authService->createNewToken($params);
-
-        if (!$token) {
-            return response()->fail(
-                __('messages.login_fail'),
-                StatusCodeEnum::LOGIN_FAIL
-            );
+        if (!auth()->attempt($request->validated())) {
+            return back()->withErrors([
+                'errors' => 'User not found',
+            ]);
         }
 
-        return response()->success(
-            $token,
-            __('messages.login_success'),
-            StatusCodeEnum::LOGIN_SUCCESS
-        );
+        Session::put('username', auth()->user()->username);
+
+        return redirect('/');
     }
 
     /**
@@ -59,13 +73,25 @@ class AuthController extends Controller
     {
         $validator = $request->validated();
 
-        $user = $this->authService->addUser($validator);
+        try {
+            $user = $this->authService->addUser($validator);
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'errors' => $e,
+            ]);
+        }
 
-        return response()->success(
-            $user,
-            __('messages.create_success'),
-            StatusCodeEnum::CREATE_SUCCESS
-        );
+        $user = auth()->attempt(["username" => $validator['username'], "password" => $validator['password']]);
+
+        if (!$user) {
+            return back()->withErrors([
+                'errors' => 'User not found',
+            ]);
+        }
+
+        Session::put('username', auth()->user()->username);
+
+        return redirect('/');
     }
 
     /**
@@ -75,28 +101,9 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        Session::forget('username');
 
-        return response()->success(
-            __('messages.logout_success'),
-            StatusCodeEnum::LOGOUT_SUCCESS
-        );
-    }
-
-    /**
-     * 重置使用者 Token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        $token = $this->authService->createNewToken(auth()->refresh());
-
-        return response()->success(
-            $token,
-            __('messages.update_success'),
-            StatusCodeEnum::UPDATE_SUCCESS
-        );
+        return redirect('/');
     }
 
     /**
@@ -106,10 +113,73 @@ class AuthController extends Controller
      */
     public function userProfile()
     {
-        return response()->success(
-            auth()->user(),
-            __('messages.success'),
-            StatusCodeEnum::SUCCESS
-        );
+        $username = Session::get('username');
+
+        if (!$username) {
+            return view('login');
+        }
+
+        $user = $this->authService->getUser($username);
+
+        return view('userprofile')->with("users", $user);
+    }
+
+    /**
+     * 修改使用者姓名與大頭貼
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function editName(EditRequest $request)
+    {
+        $validator = $request->validated();
+        $username = Session::get('username');
+        $image = $request->file('image');
+
+        if ($validator['name']) {
+            $this->authService->editName($validator, $username);
+        }
+
+        if ($image) {
+            $this->authService->changeImage($image, $username);
+        }
+
+        return redirect('/profile');
+    }
+
+    /**
+     * 修改使用者密碼
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changePwd(ChangePwdRequest $request)
+    {
+        $username = Session::get('username');
+
+        $validator = $request->validated();
+
+        if (!auth()->attempt(["username" => $username, "password" => $validator['old_pwd']])) {
+            return back()->withErrors([
+                'errors' => 'Incorrect old password',
+            ]);
+        }
+
+        $this->authService->changePwd($validator, $username);
+
+        return redirect('/profile');
+    }
+
+    /**
+     * 修改使用者詳細資訊
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function editInformation(EditInformationRequest $request)
+    {
+        $validator = $request->validated();
+        $username = Session::get('username');
+
+        $this->authService->editInformation($validator, $username);
+
+        return redirect('/profile');
     }
 }

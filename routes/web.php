@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
+
+Route::group([
+    'middleware' => 'api'
+], function ($router) {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/product-{id}', [ProductController::class, 'show']);
+    Route::get('/login', [AuthController::class, 'index']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [AuthController::class, 'userProfile']);
+    Route::post('/edit', [AuthController::class, 'editName']);
+    Route::post('/editInformation', [AuthController::class, 'editInformation']);
+    Route::post('/changePwd', [AuthController::class, 'changePwd']);
+    Route::get('/register', [AuthController::class, 'registerPage']);
+    Route::post('/register', [AuthController::class, 'register']);
+});

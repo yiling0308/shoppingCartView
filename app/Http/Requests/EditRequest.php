@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use phpDocumentor\Reflection\Types\Nullable;
 
-class RegisterRequest extends FormRequest
+class EditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +25,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string',
-            'password' => 'required|string',
-            'password_confirm' => 'required|string|same:password',
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users|regex:/^.+@.+$/i'
+            'name' => 'nullable|string',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,bmp',
         ];
     }
 }

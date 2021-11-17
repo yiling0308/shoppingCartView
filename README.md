@@ -1,8 +1,12 @@
 # API List<br>
 [GCP Pub/Sub](#gcp-pubsub-api)<br>
 [User CRUD & JWT](#user-crud-jwt)<br>
+[Product CRUD](#product-crud)<br>
+[Order Manager](#order-manager)<br>
+
+
 ## Notice
-[Postman setting](#-postman-setting)<br>
+[Postman setting](#--postman-setting)<br>
 ## GCP Pub/Sub API
 ### - Publisher
 <kbd>/api/publish</kbd> *method: post*
@@ -157,3 +161,194 @@ var body = JSON.parse(responseBody);
 postman.setEnvironmentVariable("Authorization", "Bearer " + body.dataGrid.access_token);
 ```
 ##### 3. 在需要登入權限的 API (如: userProfile) Headers 加入KEY: `Authorization`, VALUE: `{{Authorization}}`
+
+## Product CRUD
+### - 查看所有商品
+<kbd>/api/product</kbd> *method: get*
+
+⚠︎ 不需登入權限
+
+\> response example:
+```
+{
+    "status": 1000,
+    "message": "SUCCESS",
+    "dataGrid": [
+        {
+            "id": 1,
+            "name": "貓抓板",
+            "description": "讓貓貓摩爪的板板，造型可愛，形狀適合貓咪各種姿勢。",
+            "price": 120,
+            "stock": 216
+        }
+    ]
+}
+```
+### - 新增商品
+<kbd>/api/product/add</kbd> *method: post*
+
+\> request example:
+```
+{
+    "name": "益生菌",
+    "description": "幫貓咪通便的靈藥。",
+    "price": 670,
+    "stock": 312
+}
+```
+\> response example:
+```
+{
+    "status": 1001,
+    "message": "CREATE_SUCCESS",
+    "dataGrid": {
+        "name": "益生菌",
+        "description": "幫貓咪通便的靈藥。",
+        "price": 670,
+        "stock": 312,
+        "updated_at": "2021-11-16T09:55:25.000000Z",
+        "created_at": "2021-11-16T09:55:25.000000Z",
+        "id": 10
+    }
+}
+```
+### - 查詢指定商品
+<kbd>/api/product/detail</kbd> *method: get*
+
+\> request example:
+```
+{
+    "id": 2
+}
+```
+\> response example:
+```
+{
+    "status": 1000,
+    "message": "SUCCESS",
+    "dataGrid": {
+        "id": 1,
+        "name": "貓抓板",
+        "description": "讓貓貓摩爪的板板，造型可愛，形狀適合貓咪各種姿勢。",
+        "price": 120,
+        "stock": 216,
+        "created_at": "2021-11-09T08:22:53.000000Z",
+        "updated_at": "2021-11-16T01:59:42.000000Z"
+    }
+}
+```
+### - 更新商品資訊
+<kbd>/api/product/update</kbd> *method: post*
+
+\> request example:
+```
+{
+    "id": 1,
+    "stock": 217
+}
+```
+\> response example:
+```
+{
+    "status": 1002,
+    "message": "UPDATE_SUCCESS",
+    "dataGrid": {
+        "id": 1,
+        "name": "貓抓板",
+        "description": "讓貓貓摩爪的板板，造型可愛，形狀適合貓咪各種姿勢。",
+        "price": 120,
+        "stock": 217,
+        "created_at": "2021-11-09T08:22:53.000000Z",
+        "updated_at": "2021-11-16T10:00:15.000000Z"
+    }
+}
+```
+### - 刪除商品資訊
+<kbd>/api/product/delete</kbd> *method: post*
+
+\> request example:
+```
+{
+    "id": 11
+}
+```
+\> response example:
+```
+{
+    "status": 1000,
+    "message": 1003,
+    "dataGrid": "DELETE_SUCCESS"
+}
+```
+## Order Manager
+⚠︎ 需要登入權限
+### - 下訂單
+<kbd>/api/order/buy</kbd> *method: post*
+
+\> request example:
+```
+{
+    "list": [
+        {
+            "pid": 1,
+            "quantity": 2
+        }
+    ]
+}
+```
+\> response example:
+```
+{
+    "status": 1000,
+    "message": "SUCCESS",
+    "dataGrid": {
+        "oid": "2021111618041401",
+        "total": 240
+    }
+}
+```
+### - 查詢訂單
+<kbd>/api/order/find</kbd> *method: post*
+
+\> request example:
+```
+{
+    "oid": 2021111618041401
+}
+```
+\> response example:
+```
+{
+    "status": 1000,
+    "message": "SUCCESS",
+    "dataGrid": {
+        "oid": 2021111618041401,
+        "list": [
+            {
+                "name": "貓抓板",
+                "quantity": 2
+            }
+        ],
+        "total": 240,
+        "created_at": "2021-11-16 18:04:14"
+    }
+}
+```
+### - 查詢使用者個人訂單
+<kbd>/api/order</kbd> *method: get*
+
+\> response example:
+```
+{
+    "status": 1000,
+    "message": "SUCCESS",
+    "dataGrid": [
+        {
+            "id": 20,
+            "oid": "2021111618041401",
+            "total": 240,
+            "create_at": "2021-11-16 18:04:14"
+        }
+    ]
+}
+```

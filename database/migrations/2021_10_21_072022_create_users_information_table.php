@@ -16,10 +16,12 @@ class CreateUsersInformationTable extends Migration
         Schema::create('users_information', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('uid')->notnull()->unique()->comment('會員編號');
-            $table->tinyInteger('sex')->nullable()->comment('性別');
+            $table->tinyInteger('sex')->nullable()->comment('性別 (女:0, 男:1)');
             $table->date('birthday')->nullable()->comment('生日');
             $table->string('phone')->unique()->nullable()->comment('手機號碼');
-            $table->string('address')->nullable()->comment('地址');
+            $table->string('county')->nullable()->comment('縣市');
+            $table->string('district')->nullable()->comment('地區');
+            $table->string('address')->nullable()->comment('住址');
             $table->timestamps();
         });
     }
