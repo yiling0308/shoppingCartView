@@ -31,4 +31,5 @@ Route::group([
     Route::get('/register', [AuthController::class, 'registerPage']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/addToCart', [OrderController::class, 'addToCart']);
+    Route::post('/delFromCart', [OrderController::class, 'delFromCart']);
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Order\BuyRequest;
 use App\Http\Requests\Order\findOrderRequest;
 use App\Http\Requests\Order\AddToCartRequest;
+use App\Http\Requests\Order\DelFromCartRequest;
 use App\Enums\StatusCodeEnum;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Log;
@@ -39,6 +40,30 @@ class OrderController extends Controller
             'quantity' => $validated['quantity'],
             'price' => $validated['price'] * $validated['quantity']
         ];
+
+        foreach ($cart as $res) {
+            $total = $total + $res['price'];
+        };
+
+        Session::put('cart', $cart);
+        Session::put('total', $total);
+
+        return redirect()->back();
+    }
+
+    /**
+     * 從購物車中刪除
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function delFromCart(DelFromCartRequest $request)
+    {
+        $validated = $request->validated();
+
+        $total = 0;
+        $cart = Session::get('cart');
+
+        unset($cart[$validated['pid']]);
 
         foreach ($cart as $res) {
             $total = $total + $res['price'];

@@ -70,12 +70,15 @@
 									</div>
 									<hr>
 									@foreach ($cartData as $cart)
-									<div class="dropdown-item">
-										<a class="product-name">{{ $cart['name'] }}</a>
-										<a class="product-quantity">x {{ $cart['quantity'] }}</a>
-										<a class="product-total">${{ $cart['price'] }}</a>
-                    					<button class="product-delete btn btn-xs btn-danger pull-right">x</button>
-									</div>
+									<form action="/delFromCart" method="POST">
+										<div class="dropdown-item">
+											<input type="hidden" name="pid" value="{{ $cart['pid'] }}"></input>
+											<a class="product-name">{{ $cart['name'] }}</a>
+											<a class="product-quantity">x {{ $cart['quantity'] }}</a>
+											<a class="product-total">${{ $cart['price'] }}</a>
+                    						<button type="submit" class="product-delete btn btn-xs btn-danger pull-right">x</button>
+										</div>
+									</form>
 									@endforeach
 									<hr>
 									<a class="text-center" href="cart"> 查看購物車 </a>
