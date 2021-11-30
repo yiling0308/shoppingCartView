@@ -155,6 +155,27 @@
 						<h4>Price</h4>
 						<p>${{ $product->price }}</p>
 					</div>
+					<div class="widget text-center">
+						<form action="/addToCart" method="POST">
+							<input type=hidden name="pid" value="{{ $product->id }}"></input>
+							<input type=hidden name="name" value="{{ $product->name }}"></input>
+							<input type=hidden name="price" value="{{ $product->price }}"></input>
+							<div class="input-group">
+								<select name="quantity" class="form-control">
+								    <option value="1">1</option>
+								    <option value="2">2</option>
+								    <option value="3">4</option>
+								    <option value="5">5</option>
+								    <option value="6">6</option>
+								    <option value="7">7</option>
+								    <option value="8">8</option>
+								    <option value="9">9</option>
+								    <option value="10">10</option>
+								</select>
+							  <button class="btn btn-outline-secondary" type="submit">選購<i class="fa fa-shopping-cart"></i></button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 

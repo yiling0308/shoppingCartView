@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Order\BuyRequest;
 use App\Http\Requests\Order\findOrderRequest;
+use App\Http\Requests\Order\AddToCartRequest;
 use App\Enums\StatusCodeEnum;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Log;
+use Session;
 
 class OrderController extends Controller
 {
@@ -21,12 +23,39 @@ class OrderController extends Controller
     }
 
     /**
-     * 下單
+     * 加到購物車
      *
-     * @param  \App\Http\Requests\Order\ShowRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function buy(BuyRequest $request)
+    public function addToCart(AddToCartRequest $request)
+    {
+        $validated = $request->validated();
+
+        $total = 0;
+        $cart = Session::get('cart');
+        $cart[$validated['pid']] = [
+            'pid' => $validated['pid'],
+            'name' => $validated['name'],
+            'quantity' => $validated['quantity'],
+            'price' => $validated['price'] * $validated['quantity']
+        ];
+
+        foreach ($cart as $res) {
+            $total = $total + $res['price'];
+        };
+
+        Session::put('cart', $cart);
+        Session::put('total', $total);
+
+        return redirect()->back();
+    }
+
+    /**
+     * 下單
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function order(BuyRequest $request)
     {
         $validated = $request->validated();
 

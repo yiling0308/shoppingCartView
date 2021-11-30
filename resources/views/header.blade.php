@@ -41,7 +41,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<nav class="navbar navbar-expand-lg navbar-light navigation">
-					<a class="navbar-brand" href="index.html">
+					<a class="navbar-brand" href="/">
 						<img src="images/logo.png" alt="">
 					</a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -49,28 +49,6 @@
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav ml-auto main-nav ">
-							<li class="nav-item active">
-								<a class="nav-link" href="/">Home</a>
-							</li>
-							<li class="nav-item dropdown dropdown-slide">
-								<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									Pages <span><i class="fa fa-angle-down"></i></span>
-								</a>
-								<!-- Dropdown list -->
-								<div class="dropdown-menu">
-									<a class="dropdown-item" href="about-us.html">About Us</a>
-									<a class="dropdown-item" href="contact-us.html">Contact Us</a>
-									<a class="dropdown-item" href="user-profile.html">User Profile</a>
-									<a class="dropdown-item" href="404.html">404 Page</a>
-									<a class="dropdown-item" href="package.html">Package</a>
-									<a class="dropdown-item" href="single.html">Single Page</a>
-									<a class="dropdown-item" href="store.html">Store Single</a>
-									<a class="dropdown-item" href="single-blog.html">Single Post</a>
-									<a class="dropdown-item" href="blog.html">Blog</a>
-								</div>
-							</li>
-						</ul>
 						<ul class="navbar-nav ml-auto mt-10">
 
 							<li class="nav-item">
@@ -80,8 +58,28 @@
 								<a class="nav-link login-button" href="/profile">{{ $username }}</a>
 								@endif
 							</li>
-							<li class="nav-item">
-								<a class="nav-link text-white add-button" href="ad-listing.html"><i class="fa fa-plus-circle"></i> 購物車</a>
+							<li class="nav-item dropdown dropdown-slide">
+								<a class="nav-link dropdown-toggle text-white add-button" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									購物車
+								</a>
+								<span class="cart_quantity">{{ $cartCount }}</span>
+								<!-- Dropdown list -->
+								<div class="dropdown-menu" style="width: 230px;">
+									<div>
+										<a class="text-left">總共</a> <a class="total">{{ $total }} 元</a>
+									</div>
+									<hr>
+									@foreach ($cartData as $cart)
+									<div class="dropdown-item">
+										<a class="product-name">{{ $cart['name'] }}</a>
+										<a class="product-quantity">x {{ $cart['quantity'] }}</a>
+										<a class="product-total">${{ $cart['price'] }}</a>
+                    					<button class="product-delete btn btn-xs btn-danger pull-right">x</button>
+									</div>
+									@endforeach
+									<hr>
+									<a class="text-center" href="cart"> 查看購物車 </a>
+								</div>
 							</li>
 						</ul>
 					</div>

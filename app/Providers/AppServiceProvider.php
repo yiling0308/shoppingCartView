@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Session;
+use Storage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,7 +27,13 @@ class AppServiceProvider extends ServiceProvider
     {
         view()->composer('*', function ($view)
         {
+            $cart = Session::get('cart') > 0 ? Session::get('cart') : 0;
+            $total = Session::get('total') > 0 ? Session::get('total') : 0;
+
             $view->with('username', Session::get('username'));
+            $view->with('cartCount', count($cart));
+            $view->with('cartData', $cart);
+            $view->with('total', $total);
         });
     }
 }
