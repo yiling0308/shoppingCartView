@@ -20,6 +20,7 @@ Route::group([
     'middleware' => 'api'
 ], function ($router) {
     Route::get('/', [ProductController::class, 'index']);
+    Route::get('/cart', [ProductController::class, 'cart']);
     Route::get('/product-{id}', [ProductController::class, 'show']);
     Route::get('/login', [AuthController::class, 'index']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -32,4 +33,5 @@ Route::group([
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/addToCart', [OrderController::class, 'addToCart']);
     Route::post('/delFromCart', [OrderController::class, 'delFromCart']);
+    Route::post('/buy', [OrderController::class, 'order']);
 });

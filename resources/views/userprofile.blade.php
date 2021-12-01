@@ -18,7 +18,7 @@
 					<div class="widget user">
 						<!-- User Image -->
 						<div class="image d-flex justify-content-center">
-							<img src="images/user/{{ $users['image'] }}" alt="" class="">
+							<img src="images/user/{{ $users['image_name'] }}" alt="" class="">
 						</div>
 						<!-- User Name -->
 						<h5 class="text-center">{{ $users['name'] }}</h5>
@@ -104,7 +104,7 @@
 								<label for="sex">性別</label><br>
 									<input type="radio" name="sex" value="1" {{ ($users['sex'] == 1)? "checked" : "" }}>
 								<label for="boy">男</label>
-									<input type="radio" name="sex" value="0" {{ ($users['sex'] == 0)? "checked" : "" }}>
+									<input type="radio" name="sex" value="0" {{ ($users['sex'] === 0)? "checked" : "" }}>
 								<label for="girl">女</label><br>
 							</div>
 							<!-- birthday -->

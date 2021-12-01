@@ -8,6 +8,7 @@ use App\Repositories\OrderDetailRepository;
 use App\Enums\StatusCodeEnum;
 use Carbon\Carbon;
 use DB;
+use Session;
 
 class OrderService extends BaseService
 {
@@ -45,7 +46,7 @@ class OrderService extends BaseService
      */
     public function buy(array $params)
     {
-        $uid = auth()->id();
+        $uid = Session::get('user')->uid;
         $now = Carbon::now()->timezone('Asia/Taipei')->format('YmdHis');
         $date = Carbon::now()->timezone('Asia/Taipei')->format('Y-m-d');
 
@@ -83,6 +84,9 @@ class OrderService extends BaseService
             }
 
             DB::commit();
+
+            Session::forget('cart');
+            Session::forget('total');
 
             return [
                 'oid' => $params['oid'],

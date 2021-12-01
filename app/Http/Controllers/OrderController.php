@@ -85,26 +85,19 @@ class OrderController extends Controller
         $validated = $request->validated();
 
         try {
-            $result = $this->orderService->buy($validated);
+            $this->orderService->buy($validated);
         } catch (\Exception $e) {
-            $code = $e->getCode();
             Log::error('Order failed, Error: ' . json_encode([
                 'errorMessage' => $e->getMessage(),
                 'errorCode' => $e->getCode()
             ]));
 
-            return response()->fail(
-                $code,
-                __('messages.fail'),
-                StatusCodeEnum::FAIL
-            );
+            return back()->withErrors([
+                'errors' => 'Order faild',
+            ]);
         }
 
-        return response()->success(
-            $result,
-            __('messages.success'),
-            StatusCodeEnum::SUCCESS
-        );
+        return redirect('/');
     }
 
     /**

@@ -32,9 +32,21 @@ class ProductController extends Controller
     {
         $products = $this->productService->productAll();
 
-        $username = session('username');;
+        $username = session('username');
 
         return view('index', compact('products'));
+    }
+
+    /**
+     * 購物車頁面
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function cart()
+    {
+        $products = $this->productService->productAll();
+
+        return view('cart', compact('products'));
     }
 
     /**

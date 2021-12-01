@@ -59,7 +59,9 @@ class AuthController extends Controller
             ]);
         }
 
-        Session::put('username', auth()->user()->username);
+        $user = $this->authService->getUser(auth()->user()->username);
+
+        Session::put('user', $user);
 
         return redirect('/');
     }
@@ -101,7 +103,9 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        Session::forget('username');
+        Session::forget('user');
+        Session::forget('cart');
+        Session::forget('total');
 
         return redirect('/');
     }
@@ -113,7 +117,7 @@ class AuthController extends Controller
      */
     public function userProfile()
     {
-        $username = Session::get('username');
+        $username = Session::get('user')->username;
 
         if (!$username) {
             return view('login');
@@ -132,7 +136,7 @@ class AuthController extends Controller
     public function editName(EditRequest $request)
     {
         $validator = $request->validated();
-        $username = Session::get('username');
+        $username = Session::get('user')->username;
         $image = $request->file('image');
 
         if ($validator['name']) {
@@ -153,7 +157,7 @@ class AuthController extends Controller
      */
     public function changePwd(ChangePwdRequest $request)
     {
-        $username = Session::get('username');
+        $username = Session::get('user')->username;
 
         $validator = $request->validated();
 
@@ -176,7 +180,7 @@ class AuthController extends Controller
     public function editInformation(EditInformationRequest $request)
     {
         $validator = $request->validated();
-        $username = Session::get('username');
+        $username = Session::get('user')->username;
 
         $this->authService->editInformation($validator, $username);
 

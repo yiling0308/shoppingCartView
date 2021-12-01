@@ -8,7 +8,7 @@
   <title>Meow Shop</title>
 
   <!-- FAVICON -->
-  <link href="img/favicon.png" rel="shortcut icon">
+  <link href="images/favicon.png" rel="shortcut icon">
   <!-- PLUGINS CSS STYLE -->
   <!-- Bootstrap -->
   <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
@@ -18,9 +18,6 @@
   <!-- Owl Carousel -->
   <link href="plugins/slick-carousel/slick/slick.css" rel="stylesheet">
   <link href="plugins/slick-carousel/slick/slick-theme.css" rel="stylesheet">
-  <!-- Fancy Box -->
-  <link href="plugins/fancybox/jquery.fancybox.pack.css" rel="stylesheet">
-  <link href="plugins/jquery-nice-select/css/nice-select.css" rel="stylesheet">
   <!-- twzipcode -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <!-- CUSTOM CSS -->
@@ -52,10 +49,10 @@
 						<ul class="navbar-nav ml-auto mt-10">
 
 							<li class="nav-item">
-								@if (!@$username)
+								@if (!@$user)
 								<a class="nav-link login-button" href="/login">登入</a>
 								@else
-								<a class="nav-link login-button" href="/profile">{{ $username }}</a>
+								<a class="nav-link login-button" href="/profile">{{ $user['username'] }}</a>
 								@endif
 							</li>
 							<li class="nav-item dropdown dropdown-slide">
@@ -65,23 +62,29 @@
 								<span class="cart_quantity">{{ $cartCount }}</span>
 								<!-- Dropdown list -->
 								<div class="dropdown-menu" style="width: 230px;">
-									<div>
-										<a class="text-left">總共</a> <a class="total">{{ $total }} 元</a>
-									</div>
-									<hr>
-									@foreach ($cartData as $cart)
-									<form action="/delFromCart" method="POST">
-										<div class="dropdown-item">
-											<input type="hidden" name="pid" value="{{ $cart['pid'] }}"></input>
-											<a class="product-name">{{ $cart['name'] }}</a>
-											<a class="product-quantity">x {{ $cart['quantity'] }}</a>
-											<a class="product-total">${{ $cart['price'] }}</a>
-                    						<button type="submit" class="product-delete btn btn-xs btn-danger pull-right">x</button>
+									@if($cartData != 0)
+										<div>
+											<a class="text-left">總共</a> <a class="total">{{ $total }} 元</a>
 										</div>
-									</form>
-									@endforeach
-									<hr>
-									<a class="text-center" href="cart"> 查看購物車 </a>
+										<hr>
+										@foreach ($cartData as $cart)
+										<form action="/delFromCart" method="POST">
+											<div class="dropdown-item">
+												<input type="hidden" name="pid" value="{{ $cart['pid'] }}"></input>
+												<a class="product-name">{{ $cart['name'] }}</a>
+												<a class="product-quantity">x {{ $cart['quantity'] }}</a>
+												<a class="product-total">${{ $cart['price'] }}</a>
+												<button type="submit" class="product-delete btn btn-xs btn-danger pull-right">x</button>
+											</div>
+										</form>
+										<hr>
+										@endforeach
+										<a class="text-center" href="cart"> 查看購物車 </a>
+									@else
+										<div>
+											<a class="text-left">購物車無任何商品</a>
+										</div>
+									@endif
 								</div>
 							</li>
 						</ul>

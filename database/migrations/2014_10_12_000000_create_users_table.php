@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->comment('密碼');
             $table->string('name')->comment('姓名');
             $table->string('email')->unique()->comment('信箱');
+            $table->string('image_name', 40)->default('default.jpeg')->comment('大頭貼名稱');
             $table->timestamps();
         });
     }

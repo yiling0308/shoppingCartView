@@ -45,7 +45,7 @@ class OrderRepository
      * @param int $total
      * @return array|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
      */
-    public function createOrder(string $oid,int $uid, int $total)
+    public function createOrder($oid, $uid, $total)
     {
         $order = new Order;
         $order->oid = $oid;

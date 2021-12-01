@@ -48,7 +48,7 @@ class UserInformationRepository
             ->where('uid', $uid)
             ->first();
 
-        if ($params['sex']) {
+        if (isset($params['sex'])) {
             $user->sex = $params['sex'];
         }
 

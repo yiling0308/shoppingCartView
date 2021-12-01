@@ -38,6 +38,14 @@ class AuthService extends BaseService
             $user = $this->authRepository->addUser($params);
         }
 
+        $uid = $this->authRepository->getOne(['id'], ['username' => $params['username']])->id;
+
+        $params = [
+            'uid' => $uid
+        ];
+
+        $this->userInformationRepository->insertInformation($params);
+
         return $user;
     }
 
@@ -52,19 +60,7 @@ class AuthService extends BaseService
     {
         $user = $this->authRepository->getAllInfo($param);
 
-        // get image file name
-        $allFiles = File::files('images/user');
-        $matchingFiles = preg_grep('/'.$param.'\.(gif|jpe?g|bmp|png)$/', $allFiles);
-
-        foreach ($matchingFiles as $path) {
-            $user = collect($user)->merge(["image" => File::basename($path)]);
-        }
-
-        if (!$matchingFiles) {
-            $user = collect($user)->merge(["image" => "default.jpeg"]);
-        }
-
-        return $user->all();
+        return $user;
     }
 
     /**
@@ -103,6 +99,8 @@ class AuthService extends BaseService
         $destinationPath = 'images/user';
         $profileImage = $username . "." .$image->extension();
         $image->move($destinationPath, $profileImage);
+
+        $this->authRepository->update(['image_name' => $profileImage], ['username' => $username]);
     }
 
     /**
@@ -134,16 +132,7 @@ class AuthService extends BaseService
     {
         $uid = $this->authRepository->getOne(['id'], ['username' => $username])->id;
 
-        $infos = $this->userInformationRepository->getAll(['*'], ['uid' => $uid]);
-
-        if (collect($infos)->count() == 0) {
-            $param['uid'] = $uid;
-            $user = $this->userInformationRepository->insertInformation($param);
-        }
-
-        if (collect($infos)->count() > 0) {
-            $user = $this->userInformationRepository->updateInformation($param, $uid);
-        }
+        $user = $this->userInformationRepository->updateInformation($param, $uid);
 
         return $user;
     }
