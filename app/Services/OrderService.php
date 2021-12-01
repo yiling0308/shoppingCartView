@@ -105,13 +105,13 @@ class OrderService extends BaseService
     /**
      * 查詢使用者所有訂單
      *
-     * @param int $params
+     * @param int $uid
      * @return array|null
      */
-    public function findUserOrder(int $params)
+    public function findUserOrder($uid)
     {
         // 取得訂單資料
-        $orderData = $this->orderRepository->findUserOrder($params);
+        $orderData = $this->orderRepository->findUserOrder($uid);
 
         return $orderData;
     }

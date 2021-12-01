@@ -66,8 +66,7 @@ class OrderRepository
         $query = $this->model
             ->select('id', 'oid', 'total', DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d %H:%i:%s") as create_at'))
             ->where('uid', $uid)
-            ->get()
-            ->toArray();
+            ->paginate(5);
 
         return $query;
     }

@@ -33,6 +33,12 @@ class AuthController extends Controller
      */
     public function index()
     {
+        $username = Session::get('user') ? Session::get('user')->username : null;
+
+        if ($username) {
+            return redirect('/');
+        }
+
         return view('login');
     }
 
@@ -43,6 +49,12 @@ class AuthController extends Controller
      */
     public function registerPage()
     {
+        $username = Session::get('user') ? Session::get('user')->username : null;
+
+        if ($username) {
+            return redirect('/');
+        }
+
         return view('register');
     }
 
@@ -117,7 +129,7 @@ class AuthController extends Controller
      */
     public function userProfile()
     {
-        $username = Session::get('user')->username;
+        $username = Session::get('user') ? Session::get('user')->username : null;
 
         if (!$username) {
             return view('login');
@@ -136,8 +148,12 @@ class AuthController extends Controller
     public function editName(EditRequest $request)
     {
         $validator = $request->validated();
-        $username = Session::get('user')->username;
+        $username = Session::get('user') ? Session::get('user')->username : null;
         $image = $request->file('image');
+
+        if (!$username) {
+            return view('login');
+        }
 
         if ($validator['name']) {
             $this->authService->editName($validator, $username);
@@ -157,7 +173,11 @@ class AuthController extends Controller
      */
     public function changePwd(ChangePwdRequest $request)
     {
-        $username = Session::get('user')->username;
+        $username = Session::get('user') ? Session::get('user')->username : null;
+
+        if (!$username) {
+            return view('login');
+        }
 
         $validator = $request->validated();
 
@@ -180,7 +200,11 @@ class AuthController extends Controller
     public function editInformation(EditInformationRequest $request)
     {
         $validator = $request->validated();
-        $username = Session::get('user')->username;
+        $username = Session::get('user') ? Session::get('user')->username : null;
+
+        if (!$username) {
+            return view('login');
+        }
 
         $this->authService->editInformation($validator, $username);
 

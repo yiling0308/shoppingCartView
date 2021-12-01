@@ -101,20 +101,16 @@ class OrderController extends Controller
     }
 
     /**
-     * 查詢使者者所有訂單
+     * 查詢使用者所有訂單
      *
      * @return \Illuminate\Http\Response
      */
     public function findUserOrder()
     {
-        $uid = auth()->id();
-        $result = $this->orderService->findUserOrder($uid);
+        $uid = Session::get('user')->uid;
+        $order = $this->orderService->findUserOrder($uid);
 
-        return response()->success(
-            $result,
-            __('messages.success'),
-            StatusCodeEnum::SUCCESS
-        );
+        return view('order')->with('orders', $order);
     }
 
     /**

@@ -25,7 +25,7 @@
                     <!-- Dashboard Links -->
                     <div class="widget dashboard-links">
                         <ul>
-                            <li><a class="my-1 d-inline-block" href="">我的訂單</a></li>
+                            <li><a class="my-1 d-inline-block" href="order">我的訂單</a></li>
                         </ul>
                         <form action="/logout" method="POST" style="text-align: center">
                                 <button type="submit" class="bg-info text-white border-0">登出</button>
@@ -80,37 +80,12 @@
                         <hr>
                         <a class="pull-right">總額 ${{ $total }}</a><br>
                         <hr>
-                        <button type="submit" class="pull-right btn-info">結帳</button>
+                        <button type="submit" class="pull-right btn-info btn-block btn">結帳</button><br><br>
                         @foreach ($errors->all() as $error)
                             <p style="color:red">{{ $error }}</p>
                         @endforeach
                     </form>
 				</div>
-
-				<!-- pagination -->
-				<div class="pagination justify-content-center">
-					<nav aria-label="Page navigation example">
-						<ul class="pagination">
-							<li class="page-item">
-								<a class="page-link" href="#" aria-label="Previous">
-									<span aria-hidden="true">&laquo;</span>
-									<span class="sr-only">Previous</span>
-								</a>
-							</li>
-							<li class="page-item"><a class="page-link" href="#">1</a></li>
-							<li class="page-item active"><a class="page-link" href="#">2</a></li>
-							<li class="page-item"><a class="page-link" href="#">3</a></li>
-							<li class="page-item">
-								<a class="page-link" href="#" aria-label="Next">
-									<span aria-hidden="true">&raquo;</span>
-									<span class="sr-only">Next</span>
-								</a>
-							</li>
-						</ul>
-					</nav>
-				</div>
-				<!-- pagination -->
-
 			</div>
 		</div>
 		<!-- Row End -->

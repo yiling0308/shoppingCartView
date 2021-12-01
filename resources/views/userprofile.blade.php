@@ -26,7 +26,7 @@
 					<!-- Dashboard Links -->
 					<div class="widget dashboard-links">
 						<ul>
-							<li><a class="my-1 d-inline-block" href="">我的訂單</a></li>
+							<li><a class="my-1 d-inline-block" href="order">我的訂單</a></li>
 						</ul>
 						<form action="/logout" method="POST" style="text-align: center">
 								<button type="submit" class="bg-info text-white border-0">登出</button>
