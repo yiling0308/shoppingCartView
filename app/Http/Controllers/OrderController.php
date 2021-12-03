@@ -107,7 +107,12 @@ class OrderController extends Controller
      */
     public function findUserOrder()
     {
-        $uid = Session::get('user')->uid;
+        $uid = Session::get('user') ? Session::get('user')->uid : null;
+
+        if (!$uid) {
+            return redirect('/');
+        }
+
         $order = $this->orderService->findUserOrder($uid);
 
         return view('order')->with('orders', $order);
@@ -125,10 +130,6 @@ class OrderController extends Controller
 
         $result = $this->orderService->findOrder($validated);
 
-        return response()->success(
-            $result,
-            __('messages.success'),
-            StatusCodeEnum::SUCCESS
-        );
+        return view('orderDetail')->with('details', $result);
     }
 }

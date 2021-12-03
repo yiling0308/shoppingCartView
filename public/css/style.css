@@ -1725,12 +1725,28 @@ ul.pagination .active a {
   display: inline-block;
 }
 
+.orderDetailView{
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  font-size: 14px;
+  color: #363b4d;
+  text-align: center;
+  display: inline-block;
+}
+
 .dashboard-container tbody tr:hover .action button.deleteProduct {
   background: #ff5555;
   color: #fff;
   transition: all .3s ease-in 0s;
 }
 
+.dashboard-container tbody tr:hover .action button.orderDetailView {
+  background: #51cfee;
+  color: #fff;
+  transition: all .3s ease-in 0s;
+}
 
 .widget.category-list ul li:not(:last-child) {
   border-bottom: 1px solid #F4F7F9;
@@ -2280,6 +2296,8 @@ ul.pagination .active a {
   padding: 0px 3px;
   right:15px;
 }
+
+
 
 .submit-coupon-sec {
   padding-top: 70px;

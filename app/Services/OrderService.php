@@ -122,7 +122,7 @@ class OrderService extends BaseService
      * @param array $params
      * @return array|null
      */
-    public function findOrder(array $params)
+    public function findOrder($params)
     {
         // 取得訂單資料
         $orderData = $this->orderRepository->getOne(['*'], ['oid' => $params['oid']]);

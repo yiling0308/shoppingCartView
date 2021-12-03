@@ -36,42 +36,29 @@
 			<div class="col-md-10 offset-md-1 col-lg-8 offset-lg-0">
 				<!-- Recently Favorited -->
 				<div class="widget dashboard-container my-adslist">
-					<h3>我的訂單</h3>
-					<table class="table table-responsive product-dashboard-table">
-                        @foreach($orders as $order)
-						<tbody>
-							<tr>
-								<td class="product-details">
-									<h3 class="title">訂單編號: {{ $order['oid'] }}</h3>
-									<span><strong>下單日期: </strong><time>{{ $order['create_at'] }}</time> </span>
-									<span class="status active"><strong>狀態</strong>運送中</span>
-								</td>
-								<td class="product-category"><span class="categories"></span>${{ $order['total'] }}</td>
-								<form action="orderDetail" method="POST">
-									<td class="action" data-title="Action">
-										<div class="">
-											<ul class="list-inline justify-content-center">
-												<li class="list-inline-item">
-													<input type="hidden" name="oid" value="{{ $order['oid'] }}">
-													<button class="orderDetailView" type="submit">
-														<i class="fa fa-eye"></i>
-													</button>
-												</li>
-											</ul>
-										</div>
-									</td>
-								</form>
-							</tr>
-						</tbody>
-                        @endforeach
-					</table>
+					<h3>訂單編號: {{ $details['oid'] }}</h3>
+                    <form action="/buy" method="POST">
+                        <table class="table table-responsive product-dashboard-table">
+                            <tbody>
+                                <!-- {{ $i = 0 }} -->
+                                @foreach($details['list'] as $detail)
+                                <tr>
+                                    <td class="product-thumb">
+                                        <img width="80px" height="auto" src="images/products/default.jpg" alt="image description"></td>
+                                    <td class="product-details">
+                                        <h3 class="title">{{ $detail['name'] }}</h3>
+                                        <span><strong>數量</strong><time>{{ $detail['quantity'] }}</time> </span>
+                                        <span><strong>總額</strong><time>${{ $detail['quantity'] * $detail['price'] }}</time> </span>
+                                    </td>
+                                </tr>
+                                <!-- {{ $i++ }} -->
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <hr>
+                        <a class="pull-right">總額 ${{ $details['total'] }}</a><br>
+                    </form>
 				</div>
-				<!-- pagination -->
-				<div class="pull-right">
-                    {!! $orders->links() !!}
-                </div>
-				<!-- pagination -->
-
 			</div>
 		</div>
 		<!-- Row End -->

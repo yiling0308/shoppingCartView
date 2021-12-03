@@ -34,5 +34,6 @@ Route::group([
     Route::post('/addToCart', [OrderController::class, 'addToCart']);
     Route::post('/delFromCart', [OrderController::class, 'delFromCart']);
     Route::post('/buy', [OrderController::class, 'order']);
+    Route::post('/orderDetail', [OrderController::class, 'findOrder']);
     Route::get('/order', [OrderController::class, 'findUserOrder']);
 });

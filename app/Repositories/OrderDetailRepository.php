@@ -50,7 +50,7 @@ class OrderDetailRepository
     public function findOrder(object $params)
     {
         $query = $this->model
-            ->select('product.name', 'order_detail.quantity')
+            ->select('product.name', 'order_detail.quantity', 'product.price')
             ->where('ooid', $params->oid)
             ->join('product', 'product.id', '=', 'order_detail.pid')
             ->get()
