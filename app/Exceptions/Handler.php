@@ -38,4 +38,16 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /**
+     * 若使用者自行進入不支援 get 的 url, 將自動倒轉回首頁
+     *
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($exception->getStatusCode() == 405) {
+            return redirect('/');
+        }
+    }
+
 }

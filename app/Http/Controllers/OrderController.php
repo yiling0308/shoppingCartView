@@ -6,7 +6,6 @@ use App\Http\Requests\Order\BuyRequest;
 use App\Http\Requests\Order\findOrderRequest;
 use App\Http\Requests\Order\AddToCartRequest;
 use App\Http\Requests\Order\DelFromCartRequest;
-use App\Enums\StatusCodeEnum;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Log;
 use Session;
@@ -127,6 +126,12 @@ class OrderController extends Controller
     public function findOrder(findOrderRequest $request)
     {
         $validated = $request->validated();
+
+        $uid = Session::get('user') ? Session::get('user')->uid : null;
+
+        if (!$uid) {
+            return redirect('/');
+        }
 
         $result = $this->orderService->findOrder($validated);
 
